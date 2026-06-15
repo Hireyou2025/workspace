@@ -1,7 +1,7 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
-export default withAuth(
+const authMiddleware = withAuth(
   function middleware(req) {
     const token = req.nextauth.token;
     const path = req.nextUrl.pathname;
@@ -20,6 +20,11 @@ export default withAuth(
     },
   }
 );
+
+// Next.js 16 proxy export convention
+export function proxy(req: any, event: any) {
+  return authMiddleware(req, event);
+}
 
 export const config = {
   matcher: [
